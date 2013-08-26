@@ -18,6 +18,14 @@ function Sorted(superset) {
 
 var methods = {
 
+  sortBy: function(comparator) {
+
+  },
+
+  reverseSort: function() {
+
+  }
+
 };
 
 // Methods on `this._collection` we will expose to the outside world
