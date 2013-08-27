@@ -66,8 +66,35 @@ on the global object.
 
 ### new SortedCollection
 
-### sorted.sortBy
+### sorted.sortBy()
+
+Accepts
+- nothing or `null`, resets the sorting to the same order as the superset
+- a string, sorts by a model key
+- a function that accepts a model and returns a value
+
+```javascript
+// sort by the 'age' property on the models
+sorted.sortBy('age');
+
+// equivalent to this
+sorted.sortBy(function(model) {
+  return model.get('age');
+});
+
+// but we can do arbitrary computation in the closure
+sorted.sortBy(function(mode) {
+  return someComplicatedCalculation(model);
+});
+
+// Pass nothing as an option to remove all sorting
+sorted.sortBy();
+```
+
 ### sorted.reverseSort
+
+Reverse the sort.
+
 
 ## Events
 
