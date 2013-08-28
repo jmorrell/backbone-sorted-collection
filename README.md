@@ -22,6 +22,11 @@ sorted.sortBy(function(model) {
 });
 
 sorted.reverseSort();
+
+// also chainable
+sorted
+  .sortBy('name')
+  .reverseSort();
 ```
 
 ## Installation
@@ -87,19 +92,33 @@ sorted.sortBy(function(mode) {
   return someComplicatedCalculation(model);
 });
 
+// Characters with accents get sorted to the end of the alphabet, 
+// so let's sort based on the unaccented version.
+sorted.sortBy(function(model) {
+  return removeAccents(model.get('name'));
+});
+
 // Pass nothing as an option to remove all sorting
 sorted.sortBy();
 ```
 
 ### sorted.reverseSort
 
-Reverse the sort.
+Reverse the sort. The API is chainable, so this can be called directly
+after `sortBy` if you want the sort to be descending.
 
+If there is no current sort function then this does nothing.
+
+```javascript
+// Sort by age descending
+sorted.sortBy('age').reverseSort();
+```
 
 ## Events
 
 `add`, `remove`, `change`, `reset` should fire as you expect.
 
+`sorted:sort` - Triggered after
 
 ## Testing
 
