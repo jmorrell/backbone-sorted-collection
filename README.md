@@ -118,7 +118,9 @@ sorted.sortBy('age').reverseSort();
 
 `add`, `remove`, `change`, `reset` should fire as you expect.
 
-`sorted:sort` - Triggered after
+`sorted:add` - Trigger when a sort function is set
+
+`sorted:remove` - Trigger when a sort function is removed
 
 ## Testing
 
