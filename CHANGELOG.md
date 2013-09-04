@@ -1,3 +1,7 @@
+v0.3.0
+
+* Changed `sortBy` to `setSort`
+* Added `removeSort`
 
 v0.2.0
 
