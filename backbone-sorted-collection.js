@@ -65,8 +65,8 @@ function Sorted(superset) {
 
 var methods = {
 
-  sortBy: function(comparator) {
-    this._reverse = false;
+  sortBy: function(comparator, direction) {
+    this._reverse = direction === 'desc' ? true : false;
     this._comparator = comparator;
 
     sort.call(this);

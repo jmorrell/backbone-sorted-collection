@@ -27,67 +27,35 @@ sorted.reverseSort();
 sorted
   .sortBy('name')
   .reverseSort();
-```
 
-## Installation
-
-### Usage with Bower
-
-Install with [Bower](http://bower.io):
-
-```
-bower install backbone-sorted-collection
-```
-
-The component can be used as a Common JS module, an AMD module, or a global.
-
-### Usage with Browserify
-
-Install with npm, use with [Browserify](http://browserify.org/)
-
-```
-> npm install backbone-sorted-collection
-```
-
-and in your code
-
-```javascript
-var SortedCollection = require('backbone-sorted-collection');
-```
-
-### Usage as browser global
-
-You can include `backbone-sorted-collection.js` directly in a script tag. Make 
-sure that it is loaded after underscore and backbone. It's exported as `SortedCollection`
-on the global object.
-
-```HTML
-<script src="underscore.js"></script>
-<script src="backbone.js"></script>
-<script src="backbone-sorted-collection.js"></script>
+// or pass in the initial sort direction
+sorted.sortBy('name', 'desc');
 ```
 
 ## Methods
 
 ### new SortedCollection
 
-### sorted.sortBy()
+### sorted.sortBy(comparator, direction)
 
-Accepts
+`comparator` accepts:
 - nothing or `null`, resets the sorting to the same order as the superset
 - a string, sorts by a model key
 - a function that accepts a model and returns a value
 
+`direction` must be one of: `"asc"` or `"desc"`. If it's not provided it
+will default to `"asc"`.
+
 ```javascript
-// sort by the 'age' property on the models
-sorted.sortBy('age');
+// sort by the 'age' property descending
+sorted.sortBy('age', 'desc');
 
 // equivalent to this
 sorted.sortBy(function(model) {
   return model.get('age');
-});
+}, 'desc');
 
-// but we can do arbitrary computation in the closure
+// but we can also do arbitrary computation in the closure
 sorted.sortBy(function(mode) {
   return someComplicatedCalculation(model);
 });
@@ -121,6 +89,44 @@ sorted.sortBy('age').reverseSort();
 `sorted:add` - Trigger when a sort function is set
 
 `sorted:remove` - Trigger when a sort function is removed
+
+## Installation
+
+### Usage with Browserify
+
+Install with npm, use with [Browserify](http://browserify.org/)
+
+```
+> npm install backbone-sorted-collection
+```
+
+and in your code
+
+```javascript
+var SortedCollection = require('backbone-sorted-collection');
+```
+
+### Usage with Bower
+
+Install with [Bower](http://bower.io):
+
+```
+bower install backbone-sorted-collection
+```
+
+The component can be used as a Common JS module, an AMD module, or a global.
+
+### Usage as browser global
+
+You can include `backbone-sorted-collection.js` directly in a script tag. Make 
+sure that it is loaded after underscore and backbone. It's exported as `SortedCollection`
+on the global object.
+
+```HTML
+<script src="underscore.js"></script>
+<script src="backbone.js"></script>
+<script src="backbone-sorted-collection.js"></script>
+```
 
 ## Testing
 

@@ -119,6 +119,65 @@ describe('sorted collection', function() {
 
   });
 
+  describe('sorting by key desc', function() {
+
+    beforeEach(function() {
+      sorted.sortBy('b', 'desc');
+    });
+
+    it('should be ordered', function() {
+      assert(sorted.at(0).get('b') === 3);
+      assert(sorted.at(1).get('b') === 3);
+      assert(sorted.at(2).get('b') === 2);
+      assert(sorted.at(3).get('b') === 2);
+      assert(sorted.at(4).get('b') === 2);
+    });
+
+    it('should be able to be reversed', function() {
+      sorted.reverseSort();
+      assert(sorted.at(0).get('b') === 2);
+      assert(sorted.at(1).get('b') === 2);
+      assert(sorted.at(2).get('b') === 2);
+      assert(sorted.at(3).get('b') === 3);
+      assert(sorted.at(4).get('b') === 3);
+    });
+
+    it('should update to a new key', function() {
+      sorted.sortBy('c', 'desc');
+      assert(sorted.at(4).get('c') === '20');
+      assert(sorted.at(3).get('c') === '3');
+      assert(sorted.at(2).get('c') === 'a');
+      assert(sorted.at(1).get('c') === 'b');
+      assert(sorted.at(0).get('c') === 'c');
+
+      sorted.reverseSort();
+      assert(sorted.at(4).get('c') === 'c');
+      assert(sorted.at(3).get('c') === 'b');
+      assert(sorted.at(2).get('c') === 'a');
+      assert(sorted.at(1).get('c') === '3');
+      assert(sorted.at(0).get('c') === '20');
+    });
+
+    it('should revert to normal when called with no args', function() {
+      sorted.sortBy();
+      assert(sorted.at(0) === superset.at(0));
+      assert(sorted.at(1) === superset.at(1));
+      assert(sorted.at(2) === superset.at(2));
+      assert(sorted.at(3) === superset.at(3));
+      assert(sorted.at(4) === superset.at(4));
+    });
+
+    it('should maintain the sorting when rest', function() {
+      sorted.sortBy('c', 'desc');
+      superset.reset(resetData);
+      assert(sorted.at(3) === superset.at(3));
+      assert(sorted.at(2) === superset.at(0));
+      assert(sorted.at(1) === superset.at(1));
+      assert(sorted.at(0) === superset.at(2));
+    });
+
+  });
+
   describe('sorting by function', function() {
 
     beforeEach(function() {
@@ -180,6 +239,71 @@ describe('sorted collection', function() {
       assert(sorted.at(1) === superset.at(0));
       assert(sorted.at(2) === superset.at(1));
       assert(sorted.at(3) === superset.at(2));
+    });
+
+  });
+
+  describe('sorting by function desc', function() {
+
+    beforeEach(function() {
+      sorted.sortBy(function(model) {
+        return model.get('b');
+      }, 'desc');
+    });
+
+    it('should be ordered', function() {
+      assert(sorted.at(0).get('b') === 3);
+      assert(sorted.at(1).get('b') === 3);
+      assert(sorted.at(2).get('b') === 2);
+      assert(sorted.at(3).get('b') === 2);
+      assert(sorted.at(4).get('b') === 2);
+    });
+
+    it('should be able to be reversed', function() {
+      sorted.reverseSort();
+      assert(sorted.at(0).get('b') === 2);
+      assert(sorted.at(1).get('b') === 2);
+      assert(sorted.at(2).get('b') === 2);
+      assert(sorted.at(3).get('b') === 3);
+      assert(sorted.at(4).get('b') === 3);
+    });
+
+    it('should update to a new key', function() {
+      sorted.sortBy(function(model) {
+        return model.get('c');
+      }, 'desc');
+      assert(sorted.at(4).get('c') === '20');
+      assert(sorted.at(3).get('c') === '3');
+      assert(sorted.at(2).get('c') === 'a');
+      assert(sorted.at(1).get('c') === 'b');
+      assert(sorted.at(0).get('c') === 'c');
+
+      sorted.reverseSort();
+      assert(sorted.at(4).get('c') === 'c');
+      assert(sorted.at(3).get('c') === 'b');
+      assert(sorted.at(2).get('c') === 'a');
+      assert(sorted.at(1).get('c') === '3');
+      assert(sorted.at(0).get('c') === '20');
+    });
+
+    it('should revert to normal when called with no args', function() {
+      sorted.sortBy();
+      assert(sorted.at(0) === superset.at(0));
+      assert(sorted.at(1) === superset.at(1));
+      assert(sorted.at(2) === superset.at(2));
+      assert(sorted.at(3) === superset.at(3));
+      assert(sorted.at(4) === superset.at(4));
+    });
+
+    it('should maintain the sorting when rest', function() {
+      sorted.sortBy(function(model) {
+        return model.get('c');
+      }, 'desc');
+      superset.reset(resetData);
+      assert(sorted.at(3) === superset.at(3));
+      assert(sorted.at(2) === superset.at(0));
+      assert(sorted.at(1) === superset.at(1));
+      assert(sorted.at(0) === superset.at(2));
     });
 
   });
