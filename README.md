@@ -1,6 +1,6 @@
 # backbone-sorted-collection
 
-[![Build Status](https://secure.travis-ci.org/user/backbone-sorted-collection.png?branch=master)](http://travis-ci.org/user/backbone-sorted-collection)
+[![Build Status](https://secure.travis-ci.org/jmorrell/backbone-sorted-collection.png?branch=master)](http://travis-ci.org/jmorrell/backbone-sorted-collection)
 
 Create a read-only sorted version of a backbone collection that stays in sync.
 
