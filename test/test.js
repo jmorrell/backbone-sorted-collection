@@ -63,7 +63,7 @@ describe('sorted collection', function() {
   describe('sorting by key', function() {
 
     beforeEach(function() {
-      sorted.sortBy('b');
+      sorted.setSort('b');
     });
 
     it('should be ordered', function() {
@@ -84,7 +84,7 @@ describe('sorted collection', function() {
     });
 
     it('should update to a new key', function() {
-      sorted.sortBy('c');
+      sorted.setSort('c');
       assert(sorted.at(0).get('c') === '20');
       assert(sorted.at(1).get('c') === '3');
       assert(sorted.at(2).get('c') === 'a');
@@ -100,7 +100,7 @@ describe('sorted collection', function() {
     });
 
     it('should revert to normal when called with no args', function() {
-      sorted.sortBy();
+      sorted.setSort();
       assert(sorted.at(0) === superset.at(0));
       assert(sorted.at(1) === superset.at(1));
       assert(sorted.at(2) === superset.at(2));
@@ -109,7 +109,7 @@ describe('sorted collection', function() {
     });
 
     it('should maintain the sorting when rest', function() {
-      sorted.sortBy('c');
+      sorted.setSort('c');
       superset.reset(resetData);
       assert(sorted.at(0) === superset.at(3));
       assert(sorted.at(1) === superset.at(0));
@@ -122,7 +122,7 @@ describe('sorted collection', function() {
   describe('sorting by key desc', function() {
 
     beforeEach(function() {
-      sorted.sortBy('b', 'desc');
+      sorted.setSort('b', 'desc');
     });
 
     it('should be ordered', function() {
@@ -143,7 +143,7 @@ describe('sorted collection', function() {
     });
 
     it('should update to a new key', function() {
-      sorted.sortBy('c', 'desc');
+      sorted.setSort('c', 'desc');
       assert(sorted.at(4).get('c') === '20');
       assert(sorted.at(3).get('c') === '3');
       assert(sorted.at(2).get('c') === 'a');
@@ -159,7 +159,7 @@ describe('sorted collection', function() {
     });
 
     it('should revert to normal when called with no args', function() {
-      sorted.sortBy();
+      sorted.setSort();
       assert(sorted.at(0) === superset.at(0));
       assert(sorted.at(1) === superset.at(1));
       assert(sorted.at(2) === superset.at(2));
@@ -168,7 +168,7 @@ describe('sorted collection', function() {
     });
 
     it('should maintain the sorting when rest', function() {
-      sorted.sortBy('c', 'desc');
+      sorted.setSort('c', 'desc');
       superset.reset(resetData);
       assert(sorted.at(3) === superset.at(3));
       assert(sorted.at(2) === superset.at(0));
@@ -181,7 +181,7 @@ describe('sorted collection', function() {
   describe('sorting by function', function() {
 
     beforeEach(function() {
-      sorted.sortBy(function(model) {
+      sorted.setSort(function(model) {
         return model.get('b');
       });
     });
@@ -204,7 +204,7 @@ describe('sorted collection', function() {
     });
 
     it('should update to a new key', function() {
-      sorted.sortBy(function(model) {
+      sorted.setSort(function(model) {
         return model.get('c');
       });
       assert(sorted.at(0).get('c') === '20');
@@ -222,7 +222,7 @@ describe('sorted collection', function() {
     });
 
     it('should revert to normal when called with no args', function() {
-      sorted.sortBy();
+      sorted.setSort();
       assert(sorted.at(0) === superset.at(0));
       assert(sorted.at(1) === superset.at(1));
       assert(sorted.at(2) === superset.at(2));
@@ -231,7 +231,7 @@ describe('sorted collection', function() {
     });
 
     it('should maintain the sorting when rest', function() {
-      sorted.sortBy(function(model) {
+      sorted.setSort(function(model) {
         return model.get('c');
       });
       superset.reset(resetData);
@@ -246,7 +246,7 @@ describe('sorted collection', function() {
   describe('sorting by function desc', function() {
 
     beforeEach(function() {
-      sorted.sortBy(function(model) {
+      sorted.setSort(function(model) {
         return model.get('b');
       }, 'desc');
     });
@@ -269,7 +269,7 @@ describe('sorted collection', function() {
     });
 
     it('should update to a new key', function() {
-      sorted.sortBy(function(model) {
+      sorted.setSort(function(model) {
         return model.get('c');
       }, 'desc');
       assert(sorted.at(4).get('c') === '20');
@@ -287,7 +287,16 @@ describe('sorted collection', function() {
     });
 
     it('should revert to normal when called with no args', function() {
-      sorted.sortBy();
+      sorted.setSort();
+      assert(sorted.at(0) === superset.at(0));
+      assert(sorted.at(1) === superset.at(1));
+      assert(sorted.at(2) === superset.at(2));
+      assert(sorted.at(3) === superset.at(3));
+      assert(sorted.at(4) === superset.at(4));
+    });
+
+    it('should revert to normal when removeSort is called', function() {
+      sorted.removeSort();
       assert(sorted.at(0) === superset.at(0));
       assert(sorted.at(1) === superset.at(1));
       assert(sorted.at(2) === superset.at(2));
@@ -296,7 +305,7 @@ describe('sorted collection', function() {
     });
 
     it('should maintain the sorting when rest', function() {
-      sorted.sortBy(function(model) {
+      sorted.setSort(function(model) {
         return model.get('c');
       }, 'desc');
       superset.reset(resetData);
@@ -311,7 +320,7 @@ describe('sorted collection', function() {
   describe('changing a model in the superset', function() {
 
     it('should update the location based on the sort', function() {
-      sorted.sortBy('b');
+      sorted.setSort('b');
 
       var firstModel = sorted.first();
       assert(firstModel.get('b') === 2);
@@ -328,7 +337,7 @@ describe('sorted collection', function() {
   describe('removing a model in the superset', function() {
 
     it('should be removed from the sorted set', function() {
-      sorted.sortBy('b');
+      sorted.setSort('b');
 
       var firstModel = superset.first();
       superset.remove(firstModel);
@@ -341,7 +350,7 @@ describe('sorted collection', function() {
   describe('adding a model to the superset', function() {
 
     it('should be added at the correct spot', function() {
-      sorted.sortBy('b');
+      sorted.setSort('b');
 
       superset.add({ a: 1, b: 2.5, c:'100' });
 
@@ -433,7 +442,7 @@ describe('sorted collection', function() {
         called = true;
       });
 
-      sorted.sortBy('c');
+      sorted.setSort('c');
       assert(called);
     });
 
@@ -444,8 +453,8 @@ describe('sorted collection', function() {
         called = true;
       });
 
-      sorted.sortBy('c');
-      sorted.sortBy();
+      sorted.setSort('c');
+      sorted.removeSort();
 
       assert(called);
     });

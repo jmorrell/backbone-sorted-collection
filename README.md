@@ -7,17 +7,17 @@ Create a read-only sorted version of a backbone collection that stays in sync.
 ```javascript
 var sorted = new SortedCollection(originalCollection);
 
-sorted.sortBy(function(model) {
+sorted.setSort(function(model) {
   return model.get('foo');
 });
 
 // or
 
-sorted.sortBy('foo');
+sorted.setSort('foo');
 
 // or
 
-sorted.sortBy(function(model) {
+sorted.setSort(function(model) {
   return calculateSomething(model);
 });
 
@@ -25,18 +25,18 @@ sorted.reverseSort();
 
 // also chainable
 sorted
-  .sortBy('name')
+  .setSort('name')
   .reverseSort();
 
 // or pass in the initial sort direction
-sorted.sortBy('name', 'desc');
+sorted.setSort('name', 'desc');
 ```
 
 ## Methods
 
 ### new SortedCollection
 
-### sorted.sortBy(comparator, direction)
+### sorted.setSort(comparator, direction)
 
 `comparator` accepts:
 - nothing or `null`, resets the sorting to the same order as the superset
@@ -48,38 +48,45 @@ will default to `"asc"`.
 
 ```javascript
 // sort by the 'age' property descending
-sorted.sortBy('age', 'desc');
+sorted.setSort('age', 'desc');
 
 // equivalent to this
-sorted.sortBy(function(model) {
+sorted.setSort(function(model) {
   return model.get('age');
 }, 'desc');
 
 // but we can also do arbitrary computation in the closure
-sorted.sortBy(function(mode) {
+sorted.setSort(function(mode) {
   return someComplicatedCalculation(model);
 });
 
 // Characters with accents get sorted to the end of the alphabet, 
 // so let's sort based on the unaccented version.
-sorted.sortBy(function(model) {
+sorted.setSort(function(model) {
   return removeAccents(model.get('name'));
 });
 
 // Pass nothing as an option to remove all sorting
-sorted.sortBy();
+sorted.setSort();
+```
+### sorted.removeSort
+
+Remove all sorting. Equivalent to calling `sorted.setSort()`
+
+```javascript
+sorted.removeSort();
 ```
 
 ### sorted.reverseSort
 
 Reverse the sort. The API is chainable, so this can be called directly
-after `sortBy` if you want the sort to be descending.
+after `setSort` if you want the sort to be descending.
 
 If there is no current sort function then this does nothing.
 
 ```javascript
 // Sort by age descending
-sorted.sortBy('age').reverseSort();
+sorted.setSort('age').reverseSort();
 ```
 
 ## Events

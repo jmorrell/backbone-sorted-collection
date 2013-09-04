@@ -53,10 +53,6 @@ function Sorted(superset) {
   this._collection = new Backbone.Collection(superset.toArray());
   proxyCollection(this._collection, this);
 
-  // We have to delete this method that was added by `proxyCollection`
-  // so that it doesn't conflict with our custom method on the prototype
-  delete this.sortBy;
-
   this.listenTo(this._superset, 'add', onAdd);
   this.listenTo(this._superset, 'remove', onRemove);
   this.listenTo(this._superset, 'change', onChange);
@@ -65,7 +61,7 @@ function Sorted(superset) {
 
 var methods = {
 
-  sortBy: function(comparator, direction) {
+  setSort: function(comparator, direction) {
     this._reverse = direction === 'desc' ? true : false;
     this._comparator = comparator;
 
@@ -85,6 +81,10 @@ var methods = {
     sort.call(this);
 
     return this;
+  },
+
+  removeSort: function() {
+    this.setSort();
   },
 
   superset: function() {
