@@ -15,8 +15,10 @@ function onRemove(model) {
 }
 
 function onChange(model) {
-  this._collection.remove(model);
-  onAdd.call(this, model);
+  if (this.contains(model)) {
+    this._collection.remove(model);
+    onAdd.call(this, model);
+  }
 }
 
 function sort() {
