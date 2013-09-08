@@ -4,7 +4,12 @@ var Backbone =require('backbone');
 var proxyCollection = require('backbone-collection-proxy');
 
 function onAdd(model) {
-  var index = this._collection.sortedIndex(model, this._comparator);
+  var index;
+  if (!this._comparator) {
+    index = this._superset.indexOf(model);
+  } else {
+    index = this._collection.sortedIndex(model, this._comparator);
+  }
   this._collection.add(model, { at: index });
 }
 

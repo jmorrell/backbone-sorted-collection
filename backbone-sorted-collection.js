@@ -17,7 +17,12 @@ var Backbone =require('backbone');
 var proxyCollection = require('backbone-collection-proxy');
 
 function onAdd(model) {
-  var index = this._collection.sortedIndex(model, this._comparator);
+  var index;
+  if (!this._comparator) {
+    index = this._superset.indexOf(model);
+  } else {
+    index = this._collection.sortedIndex(model, this._comparator);
+  }
   this._collection.add(model, { at: index });
 }
 
@@ -28,8 +33,10 @@ function onRemove(model) {
 }
 
 function onChange(model) {
-  this._collection.remove(model);
-  onAdd.call(this, model);
+  if (this.contains(model)) {
+    this._collection.remove(model);
+    onAdd.call(this, model);
+  }
 }
 
 function sort() {
