@@ -79,6 +79,7 @@ var methods = {
 
   removeSort: function() {
     this.setSort();
+    return this;
   },
 
   superset: function() {
