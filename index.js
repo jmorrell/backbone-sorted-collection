@@ -2,13 +2,18 @@
 var _ = require('underscore');
 var Backbone =require('backbone');
 var proxyCollection = require('backbone-collection-proxy');
+var reverseSortedIndex = require('./src/reverse-sorted-index.js');
 
 function onAdd(model) {
   var index;
   if (!this._comparator) {
     index = this._superset.indexOf(model);
   } else {
-    index = this._collection.sortedIndex(model, this._comparator);
+    if (!this._reverse) {
+      index = this._collection.sortedIndex(model, this._comparator);
+    } else {
+      index = reverseSortedIndex(this._collection.toArray(), model, this._comparator);
+    }
   }
   this._collection.add(model, { at: index });
 }

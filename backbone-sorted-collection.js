@@ -15,13 +15,18 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 var _ = require('underscore');
 var Backbone =require('backbone');
 var proxyCollection = require('backbone-collection-proxy');
+var reverseSortedIndex = require('./src/reverse-sorted-index.js');
 
 function onAdd(model) {
   var index;
   if (!this._comparator) {
     index = this._superset.indexOf(model);
   } else {
-    index = this._collection.sortedIndex(model, this._comparator);
+    if (!this._reverse) {
+      index = this._collection.sortedIndex(model, this._comparator);
+    } else {
+      index = reverseSortedIndex(this._collection.toArray(), model, this._comparator);
+    }
   }
   this._collection.add(model, { at: index });
 }
@@ -107,7 +112,7 @@ _.extend(Sorted.prototype, methods, Backbone.Events);
 module.exports = Sorted;
 
 
-},{"backbone":false,"backbone-collection-proxy":2,"underscore":false}],2:[function(require,module,exports){
+},{"./src/reverse-sorted-index.js":4,"backbone":false,"backbone-collection-proxy":2,"underscore":false}],2:[function(require,module,exports){
 
 var _ = require('underscore');
 var Backbone = require('backbone');
@@ -163,7 +168,34 @@ module.exports = proxyCollection;
 
 },{"backbone":false,"underscore":false}],"backbone-sorted-collection":[function(require,module,exports){
 module.exports=require('NN7JHQ');
-},{}]},{},[])
+},{}],4:[function(require,module,exports){
+
+var _ = require('underscore');
+
+// Underscore and backbone provide a .sortedIndex function that works
+// when sorting ascending based on a function or a key, but there's no
+// way to do the same thing when sorting descending. This is a slight
+// modification of the underscore / backbone code to do the same thing
+// but descending.
+
+function lookupIterator(value) {
+  return _.isFunction(value) ? value : function(obj){ return obj.get(value); };
+}
+
+function reverseSortedIndex(array, obj, iterator, context) {
+  iterator = iterator == null ? _.identity : lookupIterator(iterator);
+  var value = iterator.call(context, obj);
+  var low = 0, high = array.length;
+  while (low < high) {
+    var mid = (low + high) >>> 1;
+    iterator.call(context, array[mid]) < value ? high = mid : low = mid + 1;
+  }
+  return low;
+}
+
+module.exports = reverseSortedIndex;
+
+},{"underscore":false}]},{},[])
 ;
 return require('backbone-sorted-collection');
 
