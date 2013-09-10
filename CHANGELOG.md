@@ -1,3 +1,9 @@
+v0.3.1
+
+* Fixed critical bug when adding models to a collection sorted 'desc'
+* Fixed critical bug when adding models with no comparator function defined
+* Made methods that otherwise don't return anything chainable
+
 v0.3.0
 
 * Changed `sortBy` to `setSort`
