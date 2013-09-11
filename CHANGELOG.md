@@ -1,3 +1,7 @@
+v0.3.2
+
+* Added ability to destroy proxy
+
 v0.3.1
 
 * Fixed critical bug when adding models to a collection sorted 'desc'
