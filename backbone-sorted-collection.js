@@ -102,6 +102,15 @@ var methods = {
 
   superset: function() {
     return this._superset;
+  },
+
+  destroy: function() {
+    this.stopListening();
+    this._collection.reset([]);
+    this._superset = this._collection;
+    this.length = 0;
+
+    this.trigger('sorted:destroy');
   }
 
 };

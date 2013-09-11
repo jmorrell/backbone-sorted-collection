@@ -89,13 +89,20 @@ If there is no current sort function then this does nothing.
 sorted.setSort('age').reverseSort();
 ```
 
+### sorted.destroy()
+
+Remove all ties to the superset and stop updating. Will now be garbage 
+collected when it falls out of scope.
+
 ## Events
 
 `add`, `remove`, `change`, `reset` should fire as you expect.
 
-`sorted:add` - Trigger when a sort function is set
+`sorted:add` - Fired when a sort function is set
 
-`sorted:remove` - Trigger when a sort function is removed
+`sorted:remove` - Fired when a sort function is removed
+
+`sorted:destroy' - Fired when the proxy is destroyed
 
 ## Installation
 
