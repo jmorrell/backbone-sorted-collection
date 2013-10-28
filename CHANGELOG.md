@@ -1,3 +1,7 @@
+v0.3.3
+
+* Updated to support Backbone v1.1.0
+
 v0.3.2
 
 * Added ability to destroy proxy
