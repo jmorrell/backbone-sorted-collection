@@ -4,15 +4,19 @@ var Backbone =require('backbone');
 var proxyCollection = require('backbone-collection-proxy');
 var reverseSortedIndex = require('./src/reverse-sorted-index.js');
 
+function lookupIterator(value) {
+  return _.isFunction(value) ? value : function(obj){ return obj.get(value); };
+}
+
 function onAdd(model) {
   var index;
   if (!this._comparator) {
     index = this._superset.indexOf(model);
   } else {
     if (!this._reverse) {
-      index = this._collection.sortedIndex(model, this._comparator);
+      index = _.sortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
     } else {
-      index = reverseSortedIndex(this._collection.toArray(), model, this._comparator);
+      index = reverseSortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
     }
   }
   this._collection.add(model, { at: index });

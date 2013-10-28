@@ -1,14 +1,14 @@
 
 var _ = require('underscore');
 
-// Underscore and backbone provide a .sortedIndex function that works
+// Underscore provides a .sortedIndex function that works
 // when sorting ascending based on a function or a key, but there's no
 // way to do the same thing when sorting descending. This is a slight
 // modification of the underscore / backbone code to do the same thing
 // but descending.
 
 function lookupIterator(value) {
-  return _.isFunction(value) ? value : function(obj){ return obj.get(value); };
+  return _.isFunction(value) ? value : function(obj){ return obj[value]; };
 }
 
 function reverseSortedIndex(array, obj, iterator, context) {

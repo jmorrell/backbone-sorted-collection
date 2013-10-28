@@ -17,15 +17,19 @@ var Backbone =require('backbone');
 var proxyCollection = require('backbone-collection-proxy');
 var reverseSortedIndex = require('./src/reverse-sorted-index.js');
 
+function lookupIterator(value) {
+  return _.isFunction(value) ? value : function(obj){ return obj.get(value); };
+}
+
 function onAdd(model) {
   var index;
   if (!this._comparator) {
     index = this._superset.indexOf(model);
   } else {
     if (!this._reverse) {
-      index = this._collection.sortedIndex(model, this._comparator);
+      index = _.sortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
     } else {
-      index = reverseSortedIndex(this._collection.toArray(), model, this._comparator);
+      index = reverseSortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
     }
   }
   this._collection.add(model, { at: index });
@@ -181,14 +185,14 @@ module.exports=require('NN7JHQ');
 
 var _ = require('underscore');
 
-// Underscore and backbone provide a .sortedIndex function that works
+// Underscore provides a .sortedIndex function that works
 // when sorting ascending based on a function or a key, but there's no
 // way to do the same thing when sorting descending. This is a slight
 // modification of the underscore / backbone code to do the same thing
 // but descending.
 
 function lookupIterator(value) {
-  return _.isFunction(value) ? value : function(obj){ return obj.get(value); };
+  return _.isFunction(value) ? value : function(obj){ return obj[value]; };
 }
 
 function reverseSortedIndex(array, obj, iterator, context) {
