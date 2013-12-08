@@ -1,3 +1,7 @@
+v0.3.5
+
+* Update dependency version requirements
+
 v0.3.4
 
 * Updated build with latest backbone-collection-proxy.
