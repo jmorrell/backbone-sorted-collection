@@ -21,20 +21,17 @@ function lookupIterator(value) {
   return _.isFunction(value) ? value : function(obj){ return obj.get(value); };
 }
 
-function modelInsertIndex(model) {
+function onAdd(model) {
+  var index;
   if (!this._comparator) {
-    return this._superset.indexOf(model);
+    index = this._superset.indexOf(model);
   } else {
     if (!this._reverse) {
-      return _.sortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
+      index = _.sortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
     } else {
-      return reverseSortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
+      index = reverseSortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
     }
   }
-}
-
-function onAdd(model) {
-  var index = modelInsertIndex.call(this, model);
   this._collection.add(model, { at: index });
 }
 
@@ -45,7 +42,7 @@ function onRemove(model) {
 }
 
 function onChange(model) {
-  if (this.contains(model) && this._collection.indexOf(model) !== modelInsertIndex.call(this, model)) {
+  if (this.contains(model)) {
     this._collection.remove(model);
     onAdd.call(this, model);
   }
@@ -231,7 +228,6 @@ function reverseSortedIndex(array, obj, iterator, context) {
 module.exports = reverseSortedIndex;
 
 },{"underscore":false}]},{},[])
-;
 return require('backbone-sorted-collection');
 
 }));
