@@ -165,7 +165,7 @@ function proxyCollection(from, target) {
     }
 
     if (_.contains(eventWhiteList, eventName)) {
-      if (_.contains(['add', 'remove', 'destory'], eventName)) {
+      if (_.contains(['add', 'remove', 'destroy'], eventName)) {
         args[2] = target;
       } else if (_.contains(['reset', 'sort'], eventName)) {
         args[1] = target;
