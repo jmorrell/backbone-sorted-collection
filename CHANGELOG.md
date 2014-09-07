@@ -1,3 +1,7 @@
+v0.3.8
+
+* Update dependency and build
+
 v0.3.7
 
 * Prevents an add / remove event when a model changes but does not change location in the collection
