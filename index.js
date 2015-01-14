@@ -44,7 +44,13 @@ function sort() {
     return;
   }
 
-  var newOrder = this._superset.sortBy(this._comparator);
+  // Evaluate the type of comparator based on http://backbonejs.org/#Collection-comparator
+  var newOrder;
+  if (_.isString(this._comparator) || this._comparator.length === 1) {
+    newOrder = this._superset.sortBy(this._comparator);
+  } else {
+    newOrder = this._superset.models.sort(this._comparator);
+  }
   this._collection.reset(this._reverse ? newOrder.reverse() : newOrder);
 }
 

@@ -10,9 +10,7 @@
     }
 }(this, function(_, Backbone) {
 var require=function(name){return {"backbone":Backbone,"underscore":_}[name];};
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"backbone-sorted-collection":[function(require,module,exports){
-module.exports=require('Focm2+');
-},{}],"Focm2+":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"Focm2+":[function(require,module,exports){
 
 var _ = require('underscore');
 var Backbone =require('backbone');
@@ -59,7 +57,12 @@ function sort() {
     return;
   }
 
-  var newOrder = this._superset.sortBy(this._comparator);
+  var newOrder;
+  if (_.isString(this._comparator) || this._comparator.length === 1) {
+    newOrder = this._superset.sortBy(this._comparator);
+  } else {
+    newOrder = this._superset.models.sort(this._comparator);
+  }
   this._collection.reset(this._reverse ? newOrder.reverse() : newOrder);
 }
 
@@ -130,7 +133,9 @@ _.extend(Sorted.prototype, methods, Backbone.Events);
 module.exports = Sorted;
 
 
-},{"./src/reverse-sorted-index.js":4,"backbone":false,"backbone-collection-proxy":3,"underscore":false}],3:[function(require,module,exports){
+},{"./src/reverse-sorted-index.js":4,"backbone":false,"backbone-collection-proxy":3,"underscore":false}],"backbone-sorted-collection":[function(require,module,exports){
+module.exports=require('Focm2+');
+},{}],3:[function(require,module,exports){
 
 var _ = require('underscore');
 var Backbone = require('backbone');
