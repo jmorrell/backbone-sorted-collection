@@ -2,7 +2,7 @@
 var _ = require('underscore');
 var Backbone =require('backbone');
 var proxyCollection = require('backbone-collection-proxy');
-var reverseSortedIndex = require('./src/reverse-sorted-index.js');
+var sortedIndex = require('./src/sorted-index.js');
 
 function lookupIterator(value) {
   return _.isFunction(value) ? value : function(obj){ return obj.get(value); };
@@ -12,11 +12,7 @@ function modelInsertIndex(model) {
   if (!this._comparator) {
     return this._superset.indexOf(model);
   } else {
-    if (!this._reverse) {
-      return _.sortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
-    } else {
-      return reverseSortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
-    }
+    return sortedIndex(this._collection.models, model, lookupIterator(this._comparator), this._reverse);
   }
 }
 

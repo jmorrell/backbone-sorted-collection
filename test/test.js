@@ -441,10 +441,15 @@ describe('sorted collection', function() {
   describe('adding a model to the superset', function() {
 
     it('should be added at the correct spot', function() {
-      sorted.setSort('b');
+      //sorted.setSort('b');
+      sorted.setSort(function(a,b) {
+        return a.get('b') > b.get('b') ? 1 : -1;
+      });
+
 
       var model = new Backbone.Model({ a: 1, b: 2.5, c:'100' });
       superset.add(model);
+
 
       assert(sorted.at(3) === model);
     });
