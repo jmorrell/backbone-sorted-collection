@@ -161,7 +161,7 @@ describe('sorted collection', function() {
 
   });
 
-  describe('sorting by function', function() {
+  describe('sorting by function (Underscore.js sortBy sort, arity is 1)', function() {
 
     beforeEach(function() {
       sorted.setSort(function(model) {
@@ -225,6 +225,72 @@ describe('sorted collection', function() {
     });
 
   });
+
+  describe('sorting by function (classic JS Array sort, arity is 2)', function() {
+
+    beforeEach(function() {
+      sorted.setSort(function(a,b) {
+        return a.get('b') > b.get('b') ? 1 : -1;
+      });
+    });
+
+    it('should be ordered', function() {
+      assert(sorted.at(0).get('b') === 2);
+      assert(sorted.at(1).get('b') === 2);
+      assert(sorted.at(2).get('b') === 2);
+      assert(sorted.at(3).get('b') === 3);
+      assert(sorted.at(4).get('b') === 3);
+    });
+
+    it('should be able to be reversed', function() {
+      sorted.reverseSort();
+      assert(sorted.at(0).get('b') === 3);
+      assert(sorted.at(1).get('b') === 3);
+      assert(sorted.at(2).get('b') === 2);
+      assert(sorted.at(3).get('b') === 2);
+      assert(sorted.at(4).get('b') === 2);
+    });
+
+    it('should update to a new key', function() {
+      sorted.setSort(function(model) {
+        return model.get('c');
+      });
+      assert(sorted.at(0).get('c') === '20');
+      assert(sorted.at(1).get('c') === '3');
+      assert(sorted.at(2).get('c') === 'a');
+      assert(sorted.at(3).get('c') === 'b');
+      assert(sorted.at(4).get('c') === 'c');
+
+      sorted.reverseSort();
+      assert(sorted.at(0).get('c') === 'c');
+      assert(sorted.at(1).get('c') === 'b');
+      assert(sorted.at(2).get('c') === 'a');
+      assert(sorted.at(3).get('c') === '3');
+      assert(sorted.at(4).get('c') === '20');
+    });
+
+    it('should revert to normal when called with no args', function() {
+      sorted.setSort();
+      assert(sorted.at(0) === superset.at(0));
+      assert(sorted.at(1) === superset.at(1));
+      assert(sorted.at(2) === superset.at(2));
+      assert(sorted.at(3) === superset.at(3));
+      assert(sorted.at(4) === superset.at(4));
+    });
+
+    it('should maintain the sorting when rest', function() {
+      sorted.setSort(function(model) {
+        return model.get('c');
+      });
+      superset.reset(resetData);
+      assert(sorted.at(0) === superset.at(3));
+      assert(sorted.at(1) === superset.at(0));
+      assert(sorted.at(2) === superset.at(1));
+      assert(sorted.at(3) === superset.at(2));
+    });
+
+  });
+
 
   describe('sorting by function desc', function() {
 
@@ -375,10 +441,15 @@ describe('sorted collection', function() {
   describe('adding a model to the superset', function() {
 
     it('should be added at the correct spot', function() {
-      sorted.setSort('b');
+      //sorted.setSort('b');
+      sorted.setSort(function(a,b) {
+        return a.get('b') > b.get('b') ? 1 : -1;
+      });
+
 
       var model = new Backbone.Model({ a: 1, b: 2.5, c:'100' });
       superset.add(model);
+
 
       assert(sorted.at(3) === model);
     });

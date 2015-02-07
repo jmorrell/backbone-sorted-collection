@@ -1,7 +1,7 @@
 {
   "name": "backbone-sorted-collection",
   "description": "Create a sorted version of a backbone collection that stays in sync.",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "homepage": "http://github.com/jmorrell/backbone-sorted-collection",
   "main": "index.js",
   "license": "MIT",

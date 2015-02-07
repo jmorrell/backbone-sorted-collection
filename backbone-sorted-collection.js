@@ -17,7 +17,7 @@ module.exports=require('Focm2+');
 var _ = require('underscore');
 var Backbone =require('backbone');
 var proxyCollection = require('backbone-collection-proxy');
-var reverseSortedIndex = require('./src/reverse-sorted-index.js');
+var sortedIndex = require('./src/sorted-index.js');
 
 function lookupIterator(value) {
   return _.isFunction(value) ? value : function(obj){ return obj.get(value); };
@@ -27,11 +27,7 @@ function modelInsertIndex(model) {
   if (!this._comparator) {
     return this._superset.indexOf(model);
   } else {
-    if (!this._reverse) {
-      return _.sortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
-    } else {
-      return reverseSortedIndex(this._collection.toArray(), model, lookupIterator(this._comparator));
-    }
+    return sortedIndex(this._collection.models, model, lookupIterator(this._comparator), this._reverse);
   }
 }
 
@@ -59,7 +55,13 @@ function sort() {
     return;
   }
 
-  var newOrder = this._superset.sortBy(this._comparator);
+  // Evaluate the type of comparator based on http://backbonejs.org/#Collection-comparator
+  var newOrder;
+  if (_.isString(this._comparator) || this._comparator.length === 1) {
+    newOrder = this._superset.sortBy(this._comparator);
+  } else {
+    newOrder = this._superset.models.sort(this._comparator);
+  }
   this._collection.reset(this._reverse ? newOrder.reverse() : newOrder);
 }
 
@@ -130,7 +132,7 @@ _.extend(Sorted.prototype, methods, Backbone.Events);
 module.exports = Sorted;
 
 
-},{"./src/reverse-sorted-index.js":4,"backbone":false,"backbone-collection-proxy":3,"underscore":false}],3:[function(require,module,exports){
+},{"./src/sorted-index.js":4,"backbone":false,"backbone-collection-proxy":3,"underscore":false}],3:[function(require,module,exports){
 
 var _ = require('underscore');
 var Backbone = require('backbone');
@@ -213,22 +215,38 @@ var _ = require('underscore');
 // modification of the underscore / backbone code to do the same thing
 // but descending.
 
-function lookupIterator(value) {
-  return _.isFunction(value) ? value : function(obj){ return obj[value]; };
+function comparatorAdapter(fieldExtractor, reverse) {
+  return function(left, right) {
+    var l = fieldExtractor(left);
+    var r = fieldExtractor(right);
+
+    if(l === r) return 0;
+
+    return reverse ? (l < r ? 1 : -1) : (l < r ? -1 : 1);
+  };
 }
 
-function reverseSortedIndex(array, obj, iterator, context) {
-  iterator = iterator == null ? _.identity : lookupIterator(iterator);
-  var value = iterator.call(context, obj);
+function lookupIterator(value, reverse) {
+  return value.length === 2 ? value : comparatorAdapter(value, reverse);
+}
+
+function sortedIndex(array, obj, iterator, reverse) {
+  iterator = iterator === null ? _.identity : lookupIterator(iterator, reverse);
+
   var low = 0, high = array.length;
   while (low < high) {
-    var mid = (low + high) >>> 1;
-    iterator.call(context, array[mid]) < value ? high = mid : low = mid + 1;
+      var mid = (low + high) >>> 1;
+    if(iterator(array[mid], obj) < 0) {
+      low = mid + 1;
+    } else {
+      high = mid;
+    }
   }
+
   return low;
 }
 
-module.exports = reverseSortedIndex;
+module.exports = sortedIndex;
 
 },{"underscore":false}]},{},[])
 return require('backbone-sorted-collection');
